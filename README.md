@@ -1,45 +1,38 @@
 # Workflow-Ready Template
 
-This repository bootstraps new projects with the same AGENTS-first workflow used in `llm-agent-dock`.
-It keeps the instructions lightweight so you (and your coding agent) can customize the docs as soon as
-real project details exist.
+This repository copies the workflow guardrails from `llm-agent-dock` so you can drop them into any
+project without recreating the planning/PR discipline by hand.
 
-## Quickstart Checklist
-1. **Create your repo** – use "Use this template" on GitHub or clone and `git push` to a new remote.
-2. **Fill in the blanks** – rename this README + `AGENTS.md` with your project name, goals, and any
-   environment constraints. The included `AGENTS.reference.md` captures the reusable guardrails.
-3. **Stand up planning** – copy `doc/ai/templates/task_plan_README.template.md` into your first task
-   folder (`doc/ai/tasks/T001_<slug>/plan/README.md`) and add at least one subtask plan. Update the
-   task index (`doc/ai/tasks/README.md`) so future collaborators can find the active work fast.
-4. **Open the GitHub issue + draft PR** – use `.github/ISSUE_TEMPLATE/task.yml`, then immediately open
-   a draft PR from `task/T001_<slug>` → `development` (or your default branch) that says
-   "Closes #<issue>".
-5. **Mirror progress** – every time you add a Progress Log entry to a plan, mirror it as a comment on
-   the task PR so async reviewers stay in sync.
+## How to Use It
+1. **Clone or fork this repository** (or click “Use this template” on GitHub) and point it at your
+   new or existing project.
+2. **Starting a new project?** Replace this `README.md` with a rough description of what you are
+   building, then ask your AI assistant “help me improve README” (or “assist in describing the
+   project initially in README”). Iterate until the README matches your launch goals.
+3. **Already have a project?** Keep your existing README exactly as it is and copy the remaining files
+   from this repo into the project so the workflow docs, templates, and issue form come along for the
+   ride.
+4. **Follow `AGENTS.md`** to run the planning workflow (task catalog, subtasks, GitHub issue/PR
+   mirroring). Update the task index as soon as you start T001 so future collaborators land on the
+   right folder.
 
-## Template Contents
+## Files Included
 | Path | Purpose |
 |------|---------|
-| `README.md` | Human-facing overview + onboarding steps (you are here). |
-| `AGENTS.md` | Minimal kickstart guide that helps an agent collect project details and customize the real docs. |
-| `AGENTS.reference.md` | Full set of workflow guardrails to copy/paste into your final AGENTS.md once tailored. |
-| `.github/ISSUE_TEMPLATE/task.yml` | Issue form that keeps GitHub + local plans aligned. |
-| `.gitignore` | Sensible defaults for Python/Node/editor artifacts. |
-| `doc/ai/tasks/README.md` | Task index to track `T###` folders, statuses, and GitHub issue links. |
-| `doc/ai/templates/task_plan_README.template.md` | Task planning template with estimate + retro sections. |
-| `doc/ai/templates/subtask_plan_README.template.md` | Subtask planning template with guardrails + retro metrics. |
+| `README.md` | This setup guide for humans adopting the template. |
+| `AGENTS.md` | Full workflow guardrails (checklists, branching rules, progress-log mirroring). |
+| `.github/ISSUE_TEMPLATE/task.yml` | GitHub issue form that mirrors the task plan structure. |
+| `.gitignore` | Basic ignores for common local artifacts. |
+| `doc/ai/tasks/README.md` | Task index scaffold with instructions for maintaining `T###` rows. |
+| `doc/ai/templates/task_plan_README.template.md` | Task planning template (estimate snapshot + retro). |
+| `doc/ai/templates/subtask_plan_README.template.md` | Subtask planning template (checklists + retro). |
 
-## How to Customize
-- Replace `Workflow-Ready Template` with your actual project name in README + AGENTS documents.
-- Copy relevant sections from `AGENTS.reference.md` into `AGENTS.md`, trimming anything you do not need.
-- Decide whether the default branch should remain `development` or change; update the instructions if
-  you use a different mainline.
-- Keep instructions scoped to your project: product usage belongs in `README.md`, workflow rules stay
-  in `AGENTS.md`, and AI-only notes live under `doc/ai/**`.
-
-## Need a Place to Log Research?
-Create `doc/ai/research/` and drop short markdown notes there. Reference them from your task plans so
-future agents can reuse the findings without re-running searches.
+## After Copying
+- Add your first task folder (`doc/ai/tasks/T001_<slug>/`) using the included templates.
+- Open the matching GitHub issue via `.github/ISSUE_TEMPLATE/task.yml`, then create the draft PR from
+  `task/T001_<slug>` to your development branch with “Closes #<issue>” in the body.
+- Mirror every Progress Log entry from the plan into the draft PR comments so async reviewers stay in
+  sync.
 
 ## License
 Apache 2.0 – see `LICENSE` for details.

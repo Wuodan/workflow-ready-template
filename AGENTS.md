@@ -1,35 +1,141 @@
-# Kickstart Instructions (Workflow-Ready Template)
+# Repository Guidelines
 
-This repo is a template. Before doing any heavy work, collaborate with the human owner to collect
-project-specific context and replace this file with customized guidance. Treat the steps below as a
-checklist for that onboarding conversation.
+These instructions are intentionally task-agnostic. Every future effort in this repo should follow
+the workflow hardening and coding conventions below to keep hand-offs simple and recoverable.
 
-## Immediate Actions
-1. **Confirm ownership + goals** – Ask the user what the new project should achieve and which
-   repositories/branches already exist.
-2. **Gather constraints** – Dependencies, required tools, token budgets, compliance needs, and any
-   CI/CD expectations all belong in the real AGENTS file. Capture them now so you can tailor
-   instructions.
-3. **Plan the first task** – Copy `doc/ai/templates/task_plan_README.template.md` into
-   `doc/ai/tasks/T001_<slug>/plan/README.md`, define subtasks, and set up the GitHub issue + draft PR.
-4. **Customize docs** – Rename this file to reflect the project’s workflow. Use
-   `AGENTS.reference.md` as your starting point and delete this kickstart notice once a real AGENTS
-   exists.
-5. **Document decisions** – Update `doc/ai/tasks/README.md` with the first task row, status, and issue
-   link so future agents land on the same context.
+## Workflow Hardening
+- **Planning trail**: For every task `T###`, scaffold `doc/ai/tasks/T###_<slug>/plan/README.md` (start from
+  `doc/ai/templates/task_plan_README.template.md`) plus one subfolder per subtask (copy
+  `doc/ai/templates/subtask_plan_README.template.md`). Each plan file needs objective, deliverables,
+  flow, checklist, explicit “commit `T###/S###: short summary`” step, and a Feedback section updated at
+  completion.
+- **GitHub task issues**: Mirror every task in GitHub using `.github/ISSUE_TEMPLATE/task.yml` as soon as
+  the task branch is created. Apply the `task` label plus exactly one `status:*` label at a time
+  (`status:proposed`, `status:active`, `status:blocked`, `status:needs-review`, `status:completed`).
+  The issue stores the canonical scope/context; after creation, only update it for status changes or
+  major scope shifts. Local docs must link to the issue instead of duplicating its prose.
+- **Task PRs**: Immediately after opening the issue, create a draft PR from `task/T###_<slug>` to
+  `development` via the MCP `github` server. The PR description must include “Closes #<issue>` plus a
+  short scope summary. Keep the PR open throughout execution, push subtask commits to the task
+  branch, and only merge once reviews/tests finish. Do **not** merge task branches locally into
+  `development`; let the PR handle merges + issue auto-close.
+- **Progress log mirroring**: Every Progress Log entry added to the plan must be duplicated as a
+  comment on the task PR (queue it locally if offline, then post once connectivity returns) so
+  reviewers can track live checkpoints without touching the issue.
+- **Workflow cost check**: For any workflow/process change, jot a quick token-cost note. If the
+  change nudges spend, verify the benefit; if it pushes ≥5% more tokens per task (or a higher tier),
+  stop and get project-owner approval first. Log the analysis in the plan so the decision is
+  traceable.
+- **Estimate snapshot**: Every task + subtask plan must include the Estimate Snapshot block (token
+  bucket XS/XL, complexity 1–5, ≤3 work-type tags, LLM tier recommendation, confidence, optional
+  dependencies + risk hotspots). Update it whenever scope changes or projected usage jumps ≥1
+  bucket (≈≥5% cost). If confidence drops to Low or bucket increases, call it out in the Progress
+  Log + task PR comment before continuing.
+- **Retro metrics**: Populate the plan’s Retro Metrics section within one session of finishing a
+  task/subtask. Record the actual token bucket plus variance, token source + confidence,
+  nearest-0.5h time spent (note calendar days if useful), estimate accuracy rating (On target /
+  Under / Over), LLM tier actually used, and variance drivers/learnings. Escalate in the Progress Log
+  + task PR if variance ≥1 bucket or confidence drops to Low.
+- **GitHub operations via MCP**: Use the MCP `github` server for every interaction with GitHub—issues,
+  labels, comments, file edits, pushes, merges, etc. Local `git push`, `git pull`, `gh ...`, or direct
+  API calls are forbidden. If MCP access ever blocks a required action, pause and document it in the
+  plan/PR instead of falling back to local tooling.
+- **Checkpointing**: Update plan checklists immediately after any progress. A stopped laptop should
+  only need the latest checklist state to resume.
+- **Research logs**: When using MCP `brave-search` or `fetch`, capture URLs + summaries in the
+  relevant subtask doc (or under `doc/ai/research/` if reused later). Avoid repeating lookups.
+- **Documentation hygiene**: Do not paste chat/discussion transcripts into repository documents; summarize outcomes and link to sanitized logs instead.
+- **Documentation scope**: Keep user-facing docs (e.g., root `README.md`) focused on product usage. Capture developer workflow/process details here in `AGENTS.md` or contributor guides, and reserve AI-only instructions for `doc/ai/**` so audiences stay separated.
+- **Commits per subtask**: Finish each subtask with `T###/S###: short summary`, where `S###` is the
+  zero-padded subtask index (use `S000` for task-level commits when no subtask exists). Never mix
+  unrelated work in a single commit.
+- **Python tooling**: If the project provides a virtual environment or runtime shim, activate it
+  before running Python-based hooks or scripts so commit tooling behaves consistently.
+- **Commit lint hook**: Configure your `commit-msg` hook (or equivalent automation) to enforce
+  subjects formatted like `T###/S###: short summary`.
+- **Status visibility**: Keep a progress log in the root plan so new agents can inspect the latest
+  timestamp and continue confidently.
+- **Task catalog**: Number tasks as `T###` (e.g., `T001`) and track them under
+  `doc/ai/tasks/README.md`. Each task owns a folder `doc/ai/tasks/T###_<slug>/` whose `README.md`
+  holds the canonical brief and links to the GitHub issue. Mark exactly one row as **Active** and
+  ensure it matches the GitHub issue’s `status:active` label. Every task doc (and each subtask file)
+  needs a Feedback section with open problems, outstanding questions, and learnings for future
+  sessions plus a link back to the GitHub issue.
 
-## Working Agreements (Until Replaced)
-- Follow the guardrails in `AGENTS.reference.md` for planning, branching, and commit naming.
-- Mirror every Progress Log update into the matching task PR comment thread.
-- Keep instructions human-readable: product docs stay in `README.md`; AI-specific process lives here
-  and in `doc/ai/**`.
-- If you need additional tooling (scripts, Dockerfiles, etc.), record the proposal in the task plan
-  before adding files so costs stay visible.
+### Branch Workflow (Tasks & Subtasks)
+1. **Start from `development`**: Before creating a task branch, run `git checkout development` and
+   `git pull --ff-only origin development` so you branch from the latest tip.
+2. **Task branch naming & remote tracking**: Create exactly one branch per active task named
+   `task/T###_<slug>` (slug matches the task folder) and push it immediately via the MCP `github`
+   server (`task/T###_<slug>` vs. `development`). All subsequent pushes for that branch also go
+   through MCP.
+3. **Issue + draft PR**: Right after the branch exists, open the GitHub issue (if not already) and a
+   draft PR from `task/T###_<slug>`→`development` with “Closes #<issue>` in the body. The PR stays
+   open/draft until tests + reviews finish; no direct merges into `development`.
+4. **Subtask branches**: For each subtask, branch from the task branch tip using
+   `subtask/T###_S#_<slug>` (example: `subtask/T004_S1_branch-policy`). Push new subtask branches via
+   MCP on creation so remote history mirrors the plan log.
+5. **Subtask integration**: When a subtask passes its checklist/tests, merge its branch back into the
+   task branch locally using `git merge --no-ff subtask/...` (still on the task branch), resolve any
+   conflicts, then push the updated task branch via MCP. Never merge the task branch into
+   `development` locally.
+6. **Push cadence**: Push after creation, after every meaningful checkpoint (tests run, major edits),
+   and before ending a session. If you cannot push (offline), record the reason + next steps in the
+   task plan progress log and the PR comment, then push as soon as connectivity returns.
+7. **PR review & merge**: All task-level merges happen via the GitHub PR. Once reviewers approve and
+   required checks pass, merge the PR (allowing GitHub to fast-forward or create the merge commit) so
+   the issue auto-closes. Only after the PR merge should you delete task/subtask branches (local+remote).
+8. **Force pushes**: `git push --force*` is forbidden on `development` and task branches. It remains
+   allowed on an unpublished subtask branch only to fix mistakes before hand-off or to excise
+   sensitive data, and the plan’s Feedback section must record the reason.
+9. **Session hand-off**: Before ending a session (or pausing a task), ensure the task branch is
+   pushed, leave the latest checkpoint in the plan + PR comment, and note any pending actions. You no
+   longer need to merge back to `development` for hand-off.
 
-## Hand-Off Expectations
-- Do not start coding against “real” scopes until the owner confirms the customized README + AGENTS
-  are ready.
-- Leave a Feedback entry in the active task plan summarizing open questions or follow-ups for the
-  next agent.
-- Once the project-specific AGENTS is published, archive this file (rename or delete) so the repo no
-  longer appears to be in kickstart mode.
+### Planning Templates
+- Task-level plan template: `doc/ai/templates/task_plan_README.template.md`
+- Subtask plan template: `doc/ai/templates/subtask_plan_README.template.md`
+- Always copy these templates when creating new task or subtask plan files and keep the commit +
+  feedback checklist items intact.
+- The templates include a "GitHub Issue" section—populate it with the issue URL, current
+  `status:*` label, and sync expectations so anyone reviewing the plan can jump straight to the
+  canonical tracker.
+
+## Coding Style & Naming Conventions
+- Shell scripts: include `#!/usr/bin/env bash`, enable `set -euo pipefail`, keep indentation
+  consistent, and lint with the tools your team trusts.
+- Config/build definitions: declare configurable arguments near the top, comment extension points,
+  and avoid environment-specific assumptions so files stay portable.
+- Structured data (HCL/JSON/YAML): stick to consistent casing (e.g., snake_case for variables,
+  kebab-case for targets) and document non-obvious fields inline.
+- Markdown: use title case headings, wrap lines around 100 chars for diffs, and favor tables for
+  matrix-style data.
+
+## Testing Guidelines
+- Provide lightweight smoke tests that prove the primary containers/CLIs/agents boot correctly.
+- Name tests `test_<feature>` (or similar) and cover dependency checks in addition to happy-path
+  flows.
+- Run the full suite regularly (at least weekly) so regressions surface before release work.
+
+## Commit, PR, and Review Expectations
+- Commit subject format: `T###/S###: short summary` (≤72 chars). Example: `T004/S001: Add branch
+  workflow policy`. `S###` is zero-padded (`S001`, `S002`, …); use `S000` for task-wide commits if no
+  subtask applies.
+- Use your preferred linting approach (commit hooks, CI checks, etc.) to keep subjects compliant.
+- PRs open as drafts when the task branch is created. The description must include “Closes #<issue>`,
+  affected matrix slices, commands executed, and links to governing tasks/plan docs. Update the PR
+  body whenever scope changes so reviewers never have to chase context. Include logs or screenshots
+  only when diagnosing failures.
+- Cross-reference planning docs (`doc/ai/tasks/T###_<slug>/plan/*.md`) whenever scope changes so
+  reviewers can trace intent quickly.
+- All merges into `development` happen through the GitHub PR (no local merges). After the PR merges
+  cleanly and the issue auto-closes, delete task/subtask branches locally + remotely and record the
+  merge in the plan progress log.
+
+## Security & Configuration Tips
+- Keep secrets (registry tokens, SSH keys, API keys) out of source control; rely on environment
+  variables or CI secrets managers instead.
+- Pin external dependencies (containers, packages, APIs) to known-good versions and revisit them
+  regularly for security advisories.
+- Document telemetry defaults and opt-out steps directly in build scripts or READMEs so adopters can
+  disable unexpected reporting.
