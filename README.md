@@ -4,7 +4,19 @@ A minimal starter to drop the AGENTS-first workflow into any repo.
 
 ## Prerequisite
 
-- Keep a Python environment at `.venv/` so commit hooks can run.
+- Keep a Python environment at `.venv/` so commit hooks can run. Agents also like having python available.
+- Create a PAT (personal access token) on GitHub with permissions to your repo.
+  - New PAT:  
+    GitHub Account Settings > Developer Settings > Personal Access Tokens > Generate New Token > Fine-grained tokens > Generate new token
+  - Make sure it has these `read and write` permissions on your repo to manage issues and PRs:
+    - Actions
+    - Contents
+    - Issues
+    - Pull requests
+- Add these 3 MCP servers to your AI assistant:
+  - github
+  - fetch
+  - brave-search
 
 ## Usage
 
