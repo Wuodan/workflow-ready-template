@@ -44,15 +44,19 @@ the workflow hardening and coding conventions below to keep hand-offs simple and
   only need the latest checklist state to resume.
 - **Research logs**: When using MCP `brave-search` or `fetch`, capture URLs + summaries in the
   relevant subtask doc (or under `doc/ai/research/` if reused later). Avoid repeating lookups.
-- **Documentation hygiene**: Do not paste chat/discussion transcripts into repository documents; summarize outcomes and link to sanitized logs instead.
-- **Documentation scope**: Keep user-facing docs (e.g., root `README.md`) focused on product usage. Capture developer workflow/process details here in `AGENTS.md` or contributor guides, and reserve AI-only instructions for `doc/ai/**` so audiences stay separated.
+- **Documentation hygiene**: Do not paste chat/discussion transcripts into repository documents; summarize outcomes and
+  link to sanitized logs instead.
+- **Documentation scope**: Keep user-facing docs (e.g., root `README.md`) focused on product usage. Capture developer
+  workflow/process details here in `AGENTS.md` or contributor guides, and reserve AI-only instructions for `doc/ai/**`
+  so audiences stay separated.
 - **Commits per subtask**: Finish each subtask with `T###/S###: short summary`, where `S###` is the
   zero-padded subtask index (use `S000` for task-level commits when no subtask exists). Never mix
   unrelated work in a single commit.
-- **Python tooling**: If the project provides a virtual environment or runtime shim, activate it
-  before running Python-based hooks or scripts so commit tooling behaves consistently.
-- **Commit lint hook**: Configure your `commit-msg` hook (or equivalent automation) to enforce
-  subjects formatted like `T###/S###: short summary`.
+- **Python tooling**: Activate the repo venv (`source .venv/bin/activate`) whenever you need the
+  `python` command; the commit hook depends on `.venv/bin/python` being available.
+- **Commit lint hook**: Run `git config core.hooksPath githooks` once per clone to enable the tracked
+  `commit-msg` hook. It calls `devtools/check_commit_message.py` (via `.venv/bin/python`) to block
+  subjects that do not match `T###/S###: short summary`.
 - **Status visibility**: Keep a progress log in the root plan so new agents can inspect the latest
   timestamp and continue confidently.
 - **Task catalog**: Number tasks as `T###` (e.g., `T001`) and track them under
@@ -101,6 +105,15 @@ the workflow hardening and coding conventions below to keep hand-offs simple and
   `status:*` label, and sync expectations so anyone reviewing the plan can jump straight to the
   canonical tracker.
 
+## Project Structure & Ownership
+- Each `doc/ai/tasks/T###_<slug>/plan/` folder captures planning artifacts; never delete history—append
+  timestamped entries so other agents can replay decisions.
+- to be extended
+
+## Build, Test, and Development Commands
+- to be defined
+
+
 ## Coding Style & Naming Conventions
 - Shell scripts: include `#!/usr/bin/env bash`, enable `set -euo pipefail`, keep indentation
   consistent, and lint with the tools your team trusts.
@@ -121,7 +134,9 @@ the workflow hardening and coding conventions below to keep hand-offs simple and
 - Commit subject format: `T###/S###: short summary` (≤72 chars). Example: `T004/S001: Add branch
   workflow policy`. `S###` is zero-padded (`S001`, `S002`, …); use `S000` for task-wide commits if no
   subtask applies.
-- Use your preferred linting approach (commit hooks, CI checks, etc.) to keep subjects compliant.
+- Use `.venv/bin/python devtools/check_commit_message.py --message "T123/S045: Example"` (or pass a
+  commit message file) to lint manually; the `githooks/commit-msg` hook runs the same script
+  automatically.
 - PRs open as drafts when the task branch is created. The description must include “Closes #<issue>`,
   affected matrix slices, commands executed, and links to governing tasks/plan docs. Update the PR
   body whenever scope changes so reviewers never have to chase context. Include logs or screenshots
