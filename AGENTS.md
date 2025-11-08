@@ -108,10 +108,10 @@ the workflow hardening and coding conventions below to keep hand-offs simple and
 ## Project Structure & Ownership
 - Each `doc/ai/tasks/T###_<slug>/plan/` folder captures planning artifacts; never delete history—append
   timestamped entries so other agents can replay decisions.
-- to be extended
+- <to be extended>
 
 ## Build, Test, and Development Commands
-- to be defined
+- <to be extended>
 
 
 ## Coding Style & Naming Conventions
