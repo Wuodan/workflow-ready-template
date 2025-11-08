@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+.env
+.env.*
+
+# Node / tooling
+node_modules/
+dist/
+build/
+
+# Editors & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Logs & misc
+*.log
+coverage/
