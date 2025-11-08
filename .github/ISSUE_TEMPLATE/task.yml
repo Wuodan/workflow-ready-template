@@ -1,5 +1,5 @@
 name: Repository Task (T###)
-description: Track llm-agent-dock tasks in GitHub while linking back to doc/ai plans.
+description: Track tasks in GitHub while linking back to doc/ai plans.
 title: "T###: <short title>"
 labels:
   - task
